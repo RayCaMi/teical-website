@@ -20,7 +20,7 @@ function ImovelDetailWrapper() {
 
   if (!property) {
     return (
-      <div className="bg-primary min-h-screen flex items-center justify-center text-white">
+      <div className="bg-background min-h-screen flex items-center justify-center text-text">
         <h2 className="text-2xl font-bold">Imóvel não encontrado.</h2>
       </div>
     );

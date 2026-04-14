@@ -32,10 +32,10 @@ export default function Imoveis({ allProperties }: { allProperties: PropertyData
   };
 
   return (
-    <div className="bg-primary min-h-screen p-8 pt-24">
+    <div className="bg-background min-h-screen p-8 pt-24">
       <div className="max-w-7xl mx-auto">
 
-        <h1 className="text-white text-3xl font-bold mb-10">
+        <h1 className="text-text text-3xl font-bold mb-10">
           A inteligência que arremata.
         </h1>
 
@@ -49,34 +49,34 @@ export default function Imoveis({ allProperties }: { allProperties: PropertyData
                   <PropertyListCard key={item.id} data={item} />
                 ))
               ) : (
-                <div className="col-span-full py-20 text-center border-2 border-dashed border-gray-800 rounded-2xl">
-                  <p className="text-gray-500">Nenhum imóvel encontrado nestas categorias.</p>
+                <div className="col-span-full py-20 text-center border-2 border-dashed border-border rounded-2xl">
+                  <p className="text-muted">Nenhum imóvel encontrado nestas categorias.</p>
                 </div>
               )}
             </div>
 
             {/* PAGINAÇÃO RESTAURADA */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-8 mt-12 py-6 border-t border-gray-800">
+              <div className="flex justify-center items-center gap-8 mt-12 py-6 border-t border-border">
 
                 {/* Botão Anterior */}
                 <button
                   onClick={() => { setCurrentPage(p => p - 1); window.scrollTo(0, 0); }}
-                  className={`text-gray-500 hover:text-secondary transition-all duration-300 flex items-center gap-2 font-bold
+                  className={`text-muted hover:text-secondary transition-all duration-300 flex items-center gap-2 font-bold
         ${currentPage === 1 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                 >
                   <ArrowBackIcon sx={{ fontWeight: 'bold' }} />
                 </button>
 
                 {/* Indicador de Página */}
-                <span className="text-gray-500 text-sm font-bold tracking-widest uppercase">
+                <span className="text-muted text-sm font-bold tracking-widest uppercase">
                   Página {currentPage} / {totalPages}
                 </span>
 
                 {/* Botão Próxima */}
                 <button
                   onClick={() => { setCurrentPage(p => p + 1); window.scrollTo(0, 0); }}
-                  className={`text-gray-500 hover:text-secondary transition-all duration-300 flex items-center gap-2 font-bold
+                  className={`text-muted hover:text-secondary transition-all duration-300 flex items-center gap-2 font-bold
         ${currentPage === totalPages ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                 >
                   <ArrowForwardIcon sx={{ fontWeight: 'bold' }} />
@@ -90,17 +90,17 @@ export default function Imoveis({ allProperties }: { allProperties: PropertyData
 
               {/* GLOSSÁRIO RESTAURADO */}
               <div className="bg-secondary-dark/10 border border-secondary/10 p-6 rounded-2xl shadow-xl">
-                <h2 className="text-white font-bold mb-6 text-xl border-b border-gray-800 pb-2">Glossário</h2>
+                <h2 className="text-text font-bold mb-6 text-xl border-b border-border pb-2">Glossário</h2>
                 <ul className="flex flex-col gap-4">
-                  <li className="flex items-center gap-3 text-gray-400 text-xs leading-relaxed">
+                  <li className="flex items-center gap-3 text-muted text-xs leading-relaxed">
                     <div className="w-3 h-3 rounded-full bg-green-500 shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
                     Imóvel de documentação regular
                   </li>
-                  <li className="flex items-center gap-3 text-gray-400 text-xs leading-relaxed">
+                  <li className="flex items-center gap-3 text-muted text-xs leading-relaxed">
                     <div className="w-3 h-3 rounded-full bg-yellow-500 shrink-0 shadow-[0_0_8px_rgba(234,179,8,0.4)]" />
                     Imóvel ocupado
                   </li>
-                  <li className="flex items-center gap-3 text-gray-400 text-xs leading-relaxed">
+                  <li className="flex items-center gap-3 text-muted text-xs leading-relaxed">
                     <div className="w-3 h-3 rounded-full bg-red-500 shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.4)]" />
                     Imóvel de financiamento não permitido
                   </li>
@@ -109,10 +109,10 @@ export default function Imoveis({ allProperties }: { allProperties: PropertyData
 
               {/* CATEGORIAS FUNCIONAIS */}
               <div className="bg-secondary-dark/10 border border-secondary/10 p-6 rounded-2xl shadow-xl">
-                <h2 className="text-white font-bold mb-6 text-xl border-b border-gray-800 pb-2">Categorias</h2>
+                <h2 className="text-text font-bold mb-6 text-xl border-b border-border pb-2">Categorias</h2>
                 <div className="grid grid-cols-1 gap-3">
                   {categorias.map((cat) => (
-                    <label key={cat} className="flex items-center gap-3 text-gray-400 text-xs cursor-pointer hover:text-white transition-colors group">
+                    <label key={cat} className="flex items-center gap-3 text-muted text-xs cursor-pointer hover:text-text transition-colors group">
                       <input
                         type="checkbox"
                         className="hidden"
@@ -122,7 +122,7 @@ export default function Imoveis({ allProperties }: { allProperties: PropertyData
                       <div className={`w-4 h-4 rounded border transition-all flex items-center justify-center
                       ${selectedCategories.includes(cat)
                           ? 'bg-secondary border-secondary'
-                          : 'border-gray-700 bg-gray-900 group-hover:border-secondary'}`}
+                          : 'border-border bg-surface group-hover:border-secondary'}`}
                       >
                         {selectedCategories.includes(cat) && <div className="w-2 h-2 bg-primary rounded-sm" />}
                       </div>
