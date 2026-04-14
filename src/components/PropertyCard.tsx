@@ -10,11 +10,9 @@ export function PropertyCard({ data }: { data: PropertyData }) {
 
       <div className="relative w-32 h-full bg-gray-800 shrink-0">
         <img src={data.fotos[0]} alt={data.nome} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-        {data.isDestaque && (
           <div className="absolute top-2 left-2 bg-black/40 backdrop-blur-sm p-1 rounded-md z-10">
             <img src="/fire.svg" alt="Destaque" className="w-4 h-4" />
           </div>
-        )}
       </div>
 
       <div className="p-3 flex flex-col justify-between w-full min-w-0">

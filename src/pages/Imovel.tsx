@@ -42,7 +42,7 @@ export default function Imovel({ data }: ImovelProps) {
                     <img
                         src={data.fotos[0]}
                         alt={data.nome}
-                        className="w-full lg:w-[500px] h-[400px] object-cover rounded-2xl shadow-2xl"
+                        className="w-full lg:w-125 h-100 object-cover rounded-2xl shadow-2xl"
                     />
 
                     <div className="flex flex-col gap-3 w-full">
