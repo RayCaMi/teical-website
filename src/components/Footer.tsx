@@ -58,7 +58,7 @@ export function Footer() {
       </div>
 
       {/* Rodapé Final */}
-      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-gray-600">
+      <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-gray-500">
         <p>© 2026 Teical. A inteligência que arremata.</p>
         
         <div className="flex gap-8">

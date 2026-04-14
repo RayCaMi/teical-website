@@ -9,7 +9,6 @@ export interface PropertyData {
   precoAtual: number;
   score: number;
   status: 'green' | 'yellow' | 'red';
-  isDestaque: boolean;
   fotos: string[]; // A primeira [0] será a principal
   categoria: 'Casa' | 'Apartamento' | 'Galpão' | 'Lajes' | 'Outros';
 }
