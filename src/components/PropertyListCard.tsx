@@ -10,7 +10,7 @@ export function PropertyListCard({ data }: { data: PropertyData }) {
   };
 
   return (
-    <Link to={`/imovel/${data.id}`} className="bg-surface rounded-xl overflow-hidden hover:border-2 border-border transition-all group flex h-auto w-full max-w-2xl relative">
+    <Link to={`/imovel/${data.id}`} className="bg-surface rounded-xl overflow-hidden hover:outline-2 outline-contrast transition-all group flex h-auto w-full max-w-2xl relative">
       <div className="absolute top-3 right-3 z-20">
         <div className={`w-3 h-3 rounded-full ${statusColors[data.status]}`}></div>
       </div>
