@@ -3,6 +3,7 @@ import { NewsCard } from "../components/NewsCard";
 import { mockNews } from "../data/newsMock";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Link } from 'react-router-dom';
 
 export default function Noticias() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -94,7 +95,9 @@ export default function Noticias() {
                                 {mockNews.slice(0, 4).map((n, i) => (
                                     <div key={n.id} className="group cursor-pointer">
                                         <span className="text-secondary text-[10px] font-bold">{i + 1}.</span>
+                                        <Link to={`/noticia/${n.id}`}>
                                         <p className="text-muted text-xs font-bold group-hover:text-text transition-colors line-clamp-2">{n.titulo}</p>
+                                        </Link>
                                     </div>
                                 ))}
                             </div>
