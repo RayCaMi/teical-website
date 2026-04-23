@@ -7,6 +7,7 @@ import QuemSomos from './pages/QuemSomos';
 import Noticias from './pages/Noticias';
 import NoticiaDetalhe from './pages/Noticia';
 import Login from './pages/Login';
+import SejaMembro from './pages/SejaMembro';
 import ScrollToTop from './components/ScrollToTop';
 
 import { mockProperties } from './data/propertiesMock';
@@ -44,6 +45,7 @@ function App() {
 
           <Route path="/noticias" element={<Noticias />} />
           <Route path="/noticia/:id" element={<NoticiaDetalhe />} />
+          <Route path="/seja-membro" element={<SejaMembro />} />
         </Route>
 
         {/* Route without MainLayout */}

@@ -57,14 +57,6 @@ export function Navbar() {
               </li>
               <li>
                 <NavLink
-                  to="/quem-somos"
-                  className={({ isActive }) => `${baseLink} ${isActive ? activeLink : 'text-gray-300'}`}
-                >
-                  Quem somos
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
                   to="/noticias"
                   className={({ isActive }) => `${baseLink} ${isActive ? activeLink : 'text-gray-300'}`}
                 >
@@ -73,10 +65,10 @@ export function Navbar() {
               </li>
               <li>
                 <NavLink
-                  to="/conexoes"
+                  to="/quem-somos"
                   className={({ isActive }) => `${baseLink} ${isActive ? activeLink : 'text-gray-300'}`}
                 >
-                  Conexões
+                  Quem somos
                 </NavLink>
               </li>
             </ul>
@@ -86,6 +78,9 @@ export function Navbar() {
 
             <Link to="/login" className="btn-primary py-2 px-6 text-sm font-bold">
               Entrar
+            </Link>
+            <Link to="/seja-membro" className="btn-primary text-secondary outline-2 outline-secondary bg-transparent hover:bg-secondary/30 py-2 px-6 text-sm font-bold">
+              Seja Membro
             </Link>
             <button
               type="button"
