@@ -13,6 +13,19 @@ export interface PropertyData {
   categoria: 'Casa' | 'Apartamento' | 'Galpão' | 'Lajes' | 'Outros';
 }
 
+export interface NewsData {
+  id: string;
+  titulo: string;
+  resumo: string;
+  categoria: string;
+  data: string;
+  leituraMinutos: number;
+  imagemUrl: string;
+  autor: string;
+  isNovo?: boolean;
+  isTendencia?: boolean;
+}
+
 // Utilitário para formatar moeda
 export const formatCurrency = (value: number) => 
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
