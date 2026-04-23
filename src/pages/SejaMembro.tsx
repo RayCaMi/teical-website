@@ -3,7 +3,7 @@ export default function SejaMembro() {
     <div className="bg-background min-h-screen pt-28 pb-20 px-6">
       <div className="max-w-7xl mx-auto">
                 <header className="text-center mb-16">
-          <h1 className="font-display text-4xl md:text-5xl tracking-tight text-text mb-4 uppercase">
+          <h1 className="text-4xl font-bold text-text mb-4 uppercase">
             O Epicentro da Inteligência Imobiliária no Brasil
           </h1>
           <p className="text-muted text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
