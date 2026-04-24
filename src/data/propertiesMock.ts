@@ -13,7 +13,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 1250000,
     score: 98, // DEVE APARECER NO HERO
     status: 'green',
-    isDestaque: true,
     fotos: ["https://images.unsplash.com/photo-1497366216548-37526070297c"]
   },
   {
@@ -28,7 +27,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 420000,
     score: 95, // DEVE APARECER NO HERO
     status: 'green',
-    isDestaque: false,
     fotos: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"]
   },
   {
@@ -43,7 +41,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 1900000,
     score: 92, // DEVE APARECER NO HERO
     status: 'yellow',
-    isDestaque: true,
     fotos: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6"]
   },
   {
@@ -58,7 +55,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 750000,
     score: 91, // DEVE APARECER NO HERO
     status: 'green',
-    isDestaque: false,
     fotos: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750"]
   },
   {
@@ -73,7 +69,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 2200000,
     score: 89, // DEVE APARECER NO HERO
     status: 'red',
-    isDestaque: false,
     fotos: ["https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d"]
   },
   {
@@ -88,7 +83,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 900000,
     score: 88, // DEVE APARECER NO HERO
     status: 'green',
-    isDestaque: true,
     fotos: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"]
   },
   {
@@ -103,7 +97,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 650000,
     score: 85, // NÃO DEVE APARECER NO HERO (SÓ TOP 6)
     status: 'green',
-    isDestaque: false,
     fotos: ["https://images.unsplash.com/photo-1480074568708-e7b720bb3f09"]
   },
   // Gerando mais 5 itens genéricos para testar a paginação (total 12)
@@ -119,7 +112,6 @@ export const mockProperties: PropertyData[] = [
     precoAtual: 500000,
     score: 70 - i,
     status: 'green' as const,
-    isDestaque: false,
     fotos: ["https://images.unsplash.com/photo-1568605114967-8130f3a36994"]
   }))
 ];

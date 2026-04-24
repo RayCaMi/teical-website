@@ -18,7 +18,7 @@ export function Hero({ allProperties }: { allProperties: PropertyData[] }) {
             <h1 className="mb-5 text-5xl font-extrabold text-white leading-tight">
                 A inteligência <br /> que arremata.
             </h1>
-            <p className="text-sm text-gray-300 mb-10 max-w-md leading-relaxed">
+            <p className="text-sm text-muted mb-10 max-w-md leading-relaxed">
                 Centralizamos os leilões imobiliários do Brasil e transformamos editais complexos
                 em oportunidades claras de investimento. Com o Teical Score, você analisa risco 
                 jurídico, desconto real e encontra as melhores oportunidades do mercado.

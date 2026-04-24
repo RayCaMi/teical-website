@@ -5,8 +5,9 @@ import Imoveis from './pages/Imoveis';
 import Imovel from './pages/Imovel';
 import QuemSomos from './pages/QuemSomos';
 import Noticias from './pages/Noticias';
-import Conexoes from './pages/Conexoes';
+import NoticiaDetalhe from './pages/Noticia';
 import Login from './pages/Login';
+import SejaMembro from './pages/SejaMembro';
 import ScrollToTop from './components/ScrollToTop';
 
 import { mockProperties } from './data/propertiesMock';
@@ -20,7 +21,7 @@ function ImovelDetailWrapper() {
 
   if (!property) {
     return (
-      <div className="bg-primary min-h-screen flex items-center justify-center text-white">
+      <div className="bg-background min-h-screen flex items-center justify-center text-text">
         <h2 className="text-2xl font-bold">Imóvel não encontrado.</h2>
       </div>
     );
@@ -34,17 +35,17 @@ function App() {
     <Router> 
       <ScrollToTop />
       <Routes>
-        {/* Routes with MainLayout (with Navbar and Footer) */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home/>} />
           <Route path="/imoveis" element={<Imoveis allProperties={mockProperties}/>} />
-          
-          {/* ROTA AJUSTADA: Agora aceita um ID dinâmico */}
+
           <Route path="/imovel/:id" element={<ImovelDetailWrapper />} />
           
           <Route path="/quem-somos" element={<QuemSomos />} />
+
           <Route path="/noticias" element={<Noticias />} />
-          <Route path="/conexoes" element={<Conexoes />} />
+          <Route path="/noticia/:id" element={<NoticiaDetalhe />} />
+          <Route path="/seja-membro" element={<SejaMembro />} />
         </Route>
 
         {/* Route without MainLayout */}

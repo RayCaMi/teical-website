@@ -9,9 +9,21 @@ export interface PropertyData {
   precoAtual: number;
   score: number;
   status: 'green' | 'yellow' | 'red';
-  isDestaque: boolean;
   fotos: string[]; // A primeira [0] será a principal
   categoria: 'Casa' | 'Apartamento' | 'Galpão' | 'Lajes' | 'Outros';
+}
+
+export interface NewsData {
+  id: string;
+  titulo: string;
+  resumo: string;
+  categoria: string;
+  data: string;
+  leituraMinutos: number;
+  imagemUrl: string;
+  autor: string;
+  isNovo?: boolean;
+  isTendencia?: boolean;
 }
 
 // Utilitário para formatar moeda

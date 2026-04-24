@@ -10,8 +10,46 @@
   --color-secondary-light: #a0e7e5;
   --color-secondary-dark: #318988;
 
+  --color-background: #eaeaea;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-border: #1a2e5b;
+  --color-contrast: #1a2e5b;
+
   /* Fonts */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --color-background: #061727;
+  --color-surface: #040f1a;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-border: #334155;
+  --color-contrast: #63d1d0;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  ::selection {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
 }
 
 @layer components {
