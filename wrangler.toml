@@ -1,0 +1,6 @@
+name = "teical-website"
+compatibility_date = "2026-05-13"
+
+[build]
+command = "npm run build"
+cwd = "./"
