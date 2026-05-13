@@ -1,0 +1,15 @@
+name = "teical-website"
+type = "javascript"
+compatibility_date = "2026-05-13"
+
+[build]
+command = "npm run build"
+cwd = "./"
+
+[build.upload]
+format = "service-worker"
+
+[env.production]
+routes = [
+  { pattern = "example.com", zone_name = "example.com" }
+]
