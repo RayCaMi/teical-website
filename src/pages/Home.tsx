@@ -4,7 +4,7 @@ import { mockProperties } from "../data/propertiesMock"
 
 function Home() {
   return (
-    <div className="bg-background w-full min-h-screen flex flex-col items-center justify-center">
+    <div className="bg-background w-full min-h-screen">
       <Hero allProperties={mockProperties}/>
     </div>
   )
