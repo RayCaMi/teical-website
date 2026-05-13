@@ -5,7 +5,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 export function Footer() {
   return (
     <footer className="bg-primary-dark text-gray-400 py-16 px-8 border-t border-gray-800/50">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 gap-12 md:grid-cols-3">
 
         {/* Coluna 1: Branding */}
         <div className="flex flex-col gap-4">
@@ -13,7 +13,7 @@ export function Footer() {
             <img src="/logo.svg" alt="Teical" className="w-8 h-8 object-contain" />
             <span className="text-xl font-bold text-secondary tracking-tight">Teical</span>
           </div>
-          <p className="text-sm leading-relaxed max-w-xs">
+          <p className="text-sm leading-relaxed max-w-md md:max-w-xs">
             A plataforma de inteligência imobiliária que transforma dados complexos em decisões seguras e lucrativas.
           </p>
         </div>
@@ -24,7 +24,7 @@ export function Footer() {
           <ul className="flex flex-col gap-3 text-sm">
             <li><Link to="/imoveis" className="hover:text-secondary transition-colors">Imóveis</Link></li>
             <li><Link to="/quem-somos" className="hover:text-secondary transition-colors">Quem somos</Link></li>
-            <li><Link to="/" className="hover:text-secondary transition-colors">Notícias</Link></li>
+            <li><Link to="/noticias" className="hover:text-secondary transition-colors">Notícias</Link></li>
             <li><Link to="/" className="hover:text-secondary transition-colors">Conexões</Link></li>
           </ul>
         </div>
@@ -33,21 +33,19 @@ export function Footer() {
         <div className="md:ml-auto">
           <h4 className="text-white font-bold text-sm mb-5 uppercase tracking-widest">Fale Conosco</h4>
           <div className="flex flex-col gap-4">
-            {/* Link de WhatsApp */}
             <a 
               href="https://wa.me/seunumerodewhatsapp" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2.5 rounded-xl transition-all duration-300 border border-green-500/20 group w-fit"
+              className="flex items-center gap-3 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2.5 rounded-xl transition-all duration-300 border border-green-500/20 group w-full md:w-fit"
             >
               <WhatsAppIcon sx={{ fontSize: 20 }} />
               <span className="text-xs font-bold uppercase">WhatsApp Direto</span>
             </a>
 
-            {/* Link de E-mail (Seguro contra injeções) */}
             <a 
               href="mailto:contato@teical.com.br" 
-              className="flex items-center gap-3 bg-secondary/5 text-gray-300 hover:text-secondary px-4 py-2.5 rounded-xl transition-all duration-300 border border-gray-800 hover:border-secondary/30 group w-fit"
+              className="flex items-center gap-3 bg-secondary/5 text-gray-300 hover:text-secondary px-4 py-2.5 rounded-xl transition-all duration-300 border border-gray-800 hover:border-secondary/30 group w-full md:w-fit"
             >
               <MailOutlineIcon sx={{ fontSize: 20 }} className="group-hover:text-secondary" />
               <span className="text-xs font-bold uppercase">E-mail Corporativo</span>

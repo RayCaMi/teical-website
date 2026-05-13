@@ -10,39 +10,35 @@ export function Hero({ allProperties }: { allProperties: PropertyData[] }) {
     .slice(0, 6);
 
   return (
-    <div className="flex h-screen w-full"
-         style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/hero-bg.jpg')`, backgroundSize: 'cover' }}>
-        
+    <div className="flex min-h-screen w-full bg-cover bg-center" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/hero-bg.jpg')` }}>
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 py-16 sm:px-8 lg:px-12 md:flex-row md:items-center md:gap-12">
+
         {/* Coluna da Esquerda: Textos */}
-        <div className="flex flex-col px-12 w-1/2 justify-center">
-            <h1 className="mb-5 text-5xl font-extrabold text-white leading-tight">
-                A inteligência <br /> que arremata.
-            </h1>
-            <p className="text-sm text-muted mb-10 max-w-md leading-relaxed">
-                Centralizamos os leilões imobiliários do Brasil e transformamos editais complexos
-                em oportunidades claras de investimento. Com o Teical Score, você analisa risco 
-                jurídico, desconto real e encontra as melhores oportunidades do mercado.
-            </p>
-            <Link to="/imoveis" className="btn-primary w-fit px-12 py-3 text-lg">
-                Ver imóveis
-            </Link>
+        <div className="flex flex-col justify-center gap-6 text-white md:w-5/12">
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">
+            A inteligência <br /> que arremata.
+          </h1>
+          <p className="max-w-lg text-sm leading-relaxed text-muted sm:text-base">
+            Centralizamos os leilões imobiliários do Brasil e transformamos editais complexos
+            em oportunidades claras de investimento. Com o Teical Score, você analisa risco
+            jurídico, desconto real e encontra as melhores oportunidades do mercado.
+          </p>
+          <Link to="/imoveis" className="btn-primary w-fit px-8 py-3 text-lg">
+            Ver imóveis
+          </Link>
         </div>
 
         {/* Coluna da Direita: Cards de Destaque */}
-        <div className="flex flex-col w-1/2 items-center justify-center pr-12">
-            <span className="text-3xl font-bold text-white mb-8 border-b-2 border-secondary pb-2">Destaques</span>
-            
-            <div className="flex gap-6">
-                {/* Coluna 1 dos Cards (0, 1, 2) */}
-                <div className="flex flex-col gap-6">
-                    {topProperties.slice(0, 3).map(prop => <PropertyCard key={prop.id} data={prop} />)}
-                </div>
-                {/* Coluna 2 dos Cards (3, 4, 5) */}
-                <div className="flex flex-col gap-6">
-                    {topProperties.slice(3, 6).map(prop => <PropertyCard key={prop.id} data={prop} />)}
-                </div>
-            </div>
+        <div className="flex w-full flex-col items-start justify-center gap-8 md:w-7/12 md:pr-12">
+          <span className="text-3xl font-bold text-white mb-4 border-b-2 border-secondary pb-2">Destaques</span>
+
+          <div className="grid w-full gap-6 md:gap-8 sm:grid-cols-2">
+            {topProperties.map(prop => (
+              <PropertyCard key={prop.id} data={prop} />
+            ))}
+          </div>
         </div>
+      </div>
     </div>
-  ); 
+  );
 }
