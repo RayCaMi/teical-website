@@ -1,0 +1,9 @@
+{
+  "name": "teical-website",
+  "type": "javascript",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-13",
+  "assets": {
+    "directory": "./dist"
+  }
+}
