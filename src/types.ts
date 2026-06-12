@@ -1,18 +1,22 @@
+// A nova estrutura exata que vem do Supabase e da IA
 export interface PropertyData {
-  id: string;
-  nome: string;
-  local: string;
-  bairro?: string;
-  cidade: string;
-  uf: string;
-  precoAvaliacao: number;
-  precoAtual: number;
+  id: string | number;
+  title: string;
+  location: string;
+  price: number;
   score: number;
-  status: 'green' | 'yellow' | 'red';
-  fotos: string[]; // A primeira [0] será a principal
-  categoria: 'Casa' | 'Apartamento' | 'Galpão' | 'Lajes' | 'Outros';
+  status: string;
+  image_url: string;
+  galeria?: string[];
+  memorial_analise?: string;
+  link_leiloeiro?: string;
+  quartos?: number;   // <- NOVA LINHA
+  vagas?: number;     // <- NOVA LINHA
+  area?: number;      // <- NOVA LINHA
+  categoria?: string; // <- NOVA LINHA
 }
 
+// A estrutura de notícias (mantida exatamente como você tinha)
 export interface NewsData {
   id: string;
   titulo: string;
@@ -27,5 +31,6 @@ export interface NewsData {
 }
 
 // Utilitário para formatar moeda
-export const formatCurrency = (value: number) => 
-  value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+export const formatCurrency = (value: number) => {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};

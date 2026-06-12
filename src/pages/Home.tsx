@@ -1,13 +1,23 @@
-import { Hero } from "../components/Hero"
-import { mockProperties } from "../data/propertiesMock"
+import { Hero } from "../components/Hero";
+import type { PropertyData } from '../types';
 
-
-function Home() {
-  return (
-    <div className="bg-background w-full min-h-screen">
-      <Hero allProperties={mockProperties}/>
-    </div>
-  )
+interface HomeProps {
+  properties?: PropertyData[];
+  loading?: boolean;
 }
 
-export default Home
+export default function Home({ properties = [], loading = false }: HomeProps) {
+  if (loading) {
+    return (
+      <div className="bg-background w-full min-h-screen flex items-center justify-center">
+        <p className="text-secondary font-bold text-xl">A carregar destaques...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-background w-full min-h-screen">
+      <Hero allProperties={properties} />
+    </div>
+  );
+}
