@@ -11,7 +11,8 @@ This project is deployed using Cloudflare Pages.
 ## Environment Variables
 
 Set the following in Cloudflare Pages dashboard:
-- No environment variables required for basic deployment
+- `VITE_API_URL` — URL do backend em produção (ex: `https://teical-api.onrender.com`).
+  Sem ela, o build usa `http://127.0.0.1:8000` (apenas desenvolvimento local).
 
 ## Local Development
 
