@@ -20,6 +20,13 @@ export default function PainelEnvio() {
   const [edital, setEdital] = useState<File | null>(null);
   const [fotos, setFotos] = useState<FileList | null>(null);
 
+  // Correção manual (opcional): quando preenchida, tem prioridade sobre a extração da IA
+  const [quartosManual, setQuartosManual] = useState("");
+  const [vagasManual, setVagasManual] = useState("");
+  const [areaManual, setAreaManual] = useState("");
+  const [categoriaManual, setCategoriaManual] = useState("");
+  const [analiseManual, setAnaliseManual] = useState("");
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -27,7 +34,7 @@ export default function PainelEnvio() {
         navigate("/login");
         return;
       }
-      const role = session.user.user_metadata?.role;
+      const role = session.user.app_metadata?.role ?? session.user.user_metadata?.role;
       if (role !== "leiloeiro" && role !== "admin") {
         navigate("/");
         return;
@@ -56,6 +63,11 @@ export default function PainelEnvio() {
     formData.append("localizacao", localizacao);
     formData.append("preco", preco);
     formData.append("link_leiloeiro", linkLeiloeiro);
+    formData.append("quartos_manual", quartosManual);
+    formData.append("vagas_manual", vagasManual);
+    formData.append("area_manual", areaManual);
+    formData.append("categoria_manual", categoriaManual);
+    formData.append("analise_manual", analiseManual);
     formData.append("edital", edital);
     Array.from(fotos).forEach(foto => formData.append("fotos", foto));
 
@@ -78,6 +90,8 @@ export default function PainelEnvio() {
       
       setTitulo(""); setLocalizacao(""); setPreco(""); setLinkLeiloeiro("");
       setEdital(null); setFotos(null);
+      setQuartosManual(""); setVagasManual(""); setAreaManual("");
+      setCategoriaManual(""); setAnaliseManual("");
     } catch (error) {
       alert("Falha ao comunicar com a IA. Verifique se o backend Python está ligado.");
     } finally {
@@ -126,6 +140,42 @@ export default function PainelEnvio() {
                 <input type="url" required value={linkLeiloeiro} onChange={e => setLinkLeiloeiro(e.target.value)} placeholder="https://..." className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors" />
               </div>
             </div>
+            <div className="h-px bg-border my-2 w-full"></div>
+
+            {/* CORREÇÃO MANUAL (OPCIONAL) — tem prioridade sobre a extração da IA */}
+            <div>
+              <h3 className="text-muted text-xs font-bold uppercase tracking-wider mb-1">Correção Manual <span className="normal-case font-normal">(opcional — deixe em branco para a IA extrair do edital)</span></h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                <div className="flex flex-col gap-2">
+                  <label className="text-muted text-xs font-bold uppercase tracking-wider">Quartos</label>
+                  <input type="number" min="0" value={quartosManual} onChange={e => setQuartosManual(e.target.value)} placeholder="Auto" className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-muted text-xs font-bold uppercase tracking-wider">Vagas</label>
+                  <input type="number" min="0" value={vagasManual} onChange={e => setVagasManual(e.target.value)} placeholder="Auto" className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-muted text-xs font-bold uppercase tracking-wider">Área (m²)</label>
+                  <input type="number" min="0" step="0.01" value={areaManual} onChange={e => setAreaManual(e.target.value)} placeholder="Auto" className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-muted text-xs font-bold uppercase tracking-wider">Categoria</label>
+                  <select value={categoriaManual} onChange={e => setCategoriaManual(e.target.value)} className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors">
+                    <option value="">Auto (IA)</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Apartamento">Apartamento</option>
+                    <option value="Galpão">Galpão</option>
+                    <option value="Lajes">Lajes</option>
+                    <option value="Outros">Outros</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 mt-4">
+                <label className="text-muted text-xs font-bold uppercase tracking-wider">Parecer do Especialista <span className="normal-case font-normal">(opcional — exibido junto à análise da IA)</span></label>
+                <textarea rows={4} value={analiseManual} onChange={e => setAnaliseManual(e.target.value)} placeholder="Observações próprias sobre o imóvel, o edital ou a oportunidade..." className="bg-background border border-border rounded-xl px-4 py-3 text-text outline-none focus:border-secondary transition-colors resize-y" />
+              </div>
+            </div>
+
             <div className="h-px bg-border my-2 w-full"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2 p-4 border border-dashed border-border rounded-xl bg-background/50 hover:border-secondary/50 transition-colors">

@@ -174,6 +174,18 @@ export default function Imovel({ data }: ImovelProps) {
                                 <ReactMarkdown>{data.memorial_analise || "Análise não disponível para este ativo."}</ReactMarkdown>
                             </div>
                         </div>
+
+                        {/* PARECER MANUAL DO ESPECIALISTA (só aparece quando o leiloeiro escreveu um) */}
+                        {data.analise_manual && (
+                            <div className="mt-8 bg-secondary/10 border border-secondary/20 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden backdrop-blur-sm">
+                                <h2 className="text-secondary font-display text-2xl text-center mb-8 uppercase tracking-widest font-black">
+                                    Parecer do Especialista
+                                </h2>
+                                <div className="text-text leading-relaxed prose prose-invert max-w-none text-sm md:text-base">
+                                    <ReactMarkdown>{data.analise_manual}</ReactMarkdown>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '../supabase';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -7,6 +9,24 @@ export function Navbar() {
   const [top, setTop] = useState(true);
   const [theme, setTheme] = useState<ThemeMode>('light');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+
+  // Mantém a navbar sincronizada com o login (inclusive após o redirect do Google)
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, novaSessao) => {
+      setSession(novaSessao);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const role = session?.user.app_metadata?.role ?? session?.user.user_metadata?.role;
+  const isStaff = role === 'leiloeiro' || role === 'admin';
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setMobileOpen(false);
+  };
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem('theme') as ThemeMode | null;
@@ -90,12 +110,27 @@ export function Navbar() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/login" className="btn-primary py-2 px-5 text-sm font-bold">
-              Entrar
-            </Link>
-            <Link to="/seja-membro" className="btn-primary text-secondary outline-2 outline-secondary bg-transparent hover:bg-secondary/30 py-2 px-5 text-sm font-bold">
-              Seja Membro
-            </Link>
+            {session ? (
+              <>
+                {isStaff && (
+                  <Link to="/painel-envio" className="btn-primary py-2 px-5 text-sm font-bold">
+                    Painel
+                  </Link>
+                )}
+                <button onClick={handleLogout} className="btn-primary text-secondary outline-2 outline-secondary bg-transparent hover:bg-secondary/30 py-2 px-5 text-sm font-bold">
+                  Sair
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn-primary py-2 px-5 text-sm font-bold">
+                  Entrar
+                </Link>
+                <Link to="/seja-membro" className="btn-primary text-secondary outline-2 outline-secondary bg-transparent hover:bg-secondary/30 py-2 px-5 text-sm font-bold">
+                  Seja Membro
+                </Link>
+              </>
+            )}
             <button
               type="button"
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
@@ -149,16 +184,35 @@ export function Navbar() {
                   Quem somos
                 </NavLink>
               </li>
-              <li>
-                <Link to="/login" className="block rounded-xl bg-secondary px-4 py-2 text-primary font-bold text-center" onClick={() => setMobileOpen(false)}>
-                  Entrar
-                </Link>
-              </li>
-              <li>
-                <Link to="/seja-membro" className="block rounded-xl border border-secondary px-4 py-2 text-secondary text-center hover:bg-secondary/20" onClick={() => setMobileOpen(false)}>
-                  Seja Membro
-                </Link>
-              </li>
+              {session ? (
+                <>
+                  {isStaff && (
+                    <li>
+                      <Link to="/painel-envio" className="block rounded-xl bg-secondary px-4 py-2 text-primary font-bold text-center" onClick={() => setMobileOpen(false)}>
+                        Painel
+                      </Link>
+                    </li>
+                  )}
+                  <li>
+                    <button onClick={handleLogout} className="w-full rounded-xl border border-secondary px-4 py-2 text-secondary text-center hover:bg-secondary/20">
+                      Sair
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/login" className="block rounded-xl bg-secondary px-4 py-2 text-primary font-bold text-center" onClick={() => setMobileOpen(false)}>
+                      Entrar
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/seja-membro" className="block rounded-xl border border-secondary px-4 py-2 text-secondary text-center hover:bg-secondary/20" onClick={() => setMobileOpen(false)}>
+                      Seja Membro
+                    </Link>
+                  </li>
+                </>
+              )}
               <li>
                 <button
                   type="button"

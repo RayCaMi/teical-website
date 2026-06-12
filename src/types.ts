@@ -9,6 +9,7 @@ export interface PropertyData {
   image_url: string;
   galeria?: string[];
   memorial_analise?: string;
+  analise_manual?: string;   // Parecer escrito pelo leiloeiro (opcional)
   link_leiloeiro?: string;
   quartos?: number;   // <- NOVA LINHA
   vagas?: number;     // <- NOVA LINHA

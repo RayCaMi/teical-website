@@ -27,8 +27,8 @@ export default function Login() {
 
       if (error) throw error;
 
-      // VERIFICAÇÃO DO CARGO (O CRACHÁ)
-      const userRole = data.user?.user_metadata?.role;
+      // VERIFICAÇÃO DO CARGO (O CRACHÁ) — app_metadata é o local seguro
+      const userRole = data.user?.app_metadata?.role ?? data.user?.user_metadata?.role;
 
       if (userRole === "leiloeiro" || userRole === "admin") {
         navigate("/painel-envio"); 
