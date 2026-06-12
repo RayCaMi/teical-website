@@ -4,6 +4,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { supabase } from "../supabase";
 
+// Em produção, defina VITE_API_URL no ambiente de build (Cloudflare Pages)
+const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+
 export default function PainelEnvio() {
   const navigate = useNavigate();
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -57,8 +60,16 @@ export default function PainelEnvio() {
     Array.from(fotos).forEach(foto => formData.append("fotos", foto));
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/cadastrar-leilao/", {
+      // O backend exige o token da sessão para autorizar o cadastro
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/cadastrar-leilao/`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
         body: formData,
       });
       if (!response.ok) throw new Error("Erro no servidor");
