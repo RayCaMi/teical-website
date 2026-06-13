@@ -10,6 +10,8 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ReactMarkdown from 'react-markdown';
 
 import { useNavigate } from 'react-router-dom';
@@ -121,7 +123,9 @@ export default function Imovel({ data }: ImovelProps) {
     // SISTEMA DE GALERIA DE FOTOS
     // Se existir uma galeria com fotos, usamos. Se não, criamos uma lista só com a foto de capa.
     const fotosGaleria = data.galeria && data.galeria.length > 0 ? data.galeria : [data.image_url];
-    const [fotoAtiva, setFotoAtiva] = useState(fotosGaleria[0]);
+    const [fotoIndex, setFotoIndex] = useState(0);
+    const fotoAtiva = fotosGaleria[fotoIndex];
+    const irFoto = (delta: number) => setFotoIndex(i => (i + delta + fotosGaleria.length) % fotosGaleria.length);
 
     const handleManualClick = () => {
         setShowManualAnalysis(!showManualAnalysis);
@@ -146,25 +150,49 @@ export default function Imovel({ data }: ImovelProps) {
                     
                     {/* LADO ESQUERDO: GALERIA DE FOTOS */}
                     <div className="w-full lg:w-1/2 flex flex-col gap-4">
-                        {/* Foto Principal Grande */}
-                        <div className="w-full h-[400px] lg:h-[500px] overflow-hidden rounded-2xl shadow-2xl border border-border/20">
+                        {/* Foto Principal Grande com navegação */}
+                        <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden rounded-2xl shadow-2xl border border-border/20 group">
                             <img
                                 src={fotoAtiva}
-                                alt={data.title}
+                                alt={`${data.title} — foto ${fotoIndex + 1}`}
                                 className="w-full h-full object-cover transition-all duration-500"
                             />
+                            {fotosGaleria.length > 1 && (
+                                <>
+                                    {/* Seta anterior */}
+                                    <button
+                                        onClick={() => irFoto(-1)}
+                                        aria-label="Foto anterior"
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100"
+                                    >
+                                        <ChevronLeftIcon />
+                                    </button>
+                                    {/* Seta próxima */}
+                                    <button
+                                        onClick={() => irFoto(1)}
+                                        aria-label="Próxima foto"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center backdrop-blur-sm hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100"
+                                    >
+                                        <ChevronRightIcon />
+                                    </button>
+                                    {/* Contador */}
+                                    <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
+                                        {fotoIndex + 1} / {fotosGaleria.length}
+                                    </div>
+                                </>
+                            )}
                         </div>
-                        
+
                         {/* Miniaturas (Só aparece se houver mais de 1 foto) */}
                         {fotosGaleria.length > 1 && (
                             <div className="flex gap-3 overflow-x-auto py-2 scrollbar-thin">
                                 {fotosGaleria.map((foto, index) => (
-                                    <button 
+                                    <button
                                         key={index}
-                                        onClick={() => setFotoAtiva(foto)}
+                                        onClick={() => setFotoIndex(index)}
                                         className={`shrink-0 rounded-xl overflow-hidden transition-all duration-300 ${
-                                            fotoAtiva === foto 
-                                            ? 'ring-2 ring-secondary scale-105 shadow-lg' 
+                                            fotoIndex === index
+                                            ? 'ring-2 ring-secondary scale-105 shadow-lg'
                                             : 'opacity-50 hover:opacity-100 border border-border'
                                         }`}
                                     >

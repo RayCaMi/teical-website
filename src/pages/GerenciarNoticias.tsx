@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { supabase } from "../supabase";
 import { API_URL } from "../config";
 import { mapNews, type NewsData, type NewsRow } from "../types";
+import MarkdownEditor from "../components/MarkdownEditor";
 
 const CATEGORIAS = ['Leilões', 'Direito Imobiliário', 'Mercado', 'Jurisprudência', 'Tributário', 'Tecnologia'];
 
@@ -194,9 +195,9 @@ export default function GerenciarNoticias() {
             <label className="flex flex-col gap-2 text-muted text-xs font-bold uppercase tracking-wider">Resumo <span className="normal-case font-normal">(aparece nos cards)</span>
               <textarea rows={2} value={form.resumo} onChange={e => setForm({ ...form, resumo: e.target.value })} className={`${inputClasse} normal-case font-normal resize-y`} />
             </label>
-            <label className="flex flex-col gap-2 text-muted text-xs font-bold uppercase tracking-wider">Conteúdo <span className="normal-case font-normal">(corpo do artigo — aceita Markdown: ## títulos, **negrito**, listas)</span>
-              <textarea rows={12} value={form.conteudo} onChange={e => setForm({ ...form, conteudo: e.target.value })} className={`${inputClasse} normal-case font-normal resize-y font-mono text-sm`} />
-            </label>
+            <div className="flex flex-col gap-2 text-muted text-xs font-bold uppercase tracking-wider">Conteúdo <span className="normal-case font-normal">(use a barra para formatar; clique em Prévia para ver o resultado)</span>
+              <MarkdownEditor value={form.conteudo} onChange={v => setForm({ ...form, conteudo: v })} placeholder="Escreva o corpo do artigo..." />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <label className="flex flex-col gap-2 text-muted text-xs font-bold uppercase tracking-wider">Tempo de leitura (min)
                 <input type="number" min="1" value={form.leitura_minutos} onChange={e => setForm({ ...form, leitura_minutos: e.target.value })} className={`${inputClasse} normal-case font-normal`} />
