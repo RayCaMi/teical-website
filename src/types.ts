@@ -3,6 +3,8 @@ export interface PropertyData {
   id: string | number;
   title: string;
   location: string;
+  endereco?: string;   // Endereço completo (rua, número, bairro)
+  owner_id?: string;   // Leiloeiro que cadastrou (controla quem pode editar)
   price: number;
   score: number;
   status: string;

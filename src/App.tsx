@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import SejaMembro from './pages/SejaMembro';
 import ScrollToTop from './components/ScrollToTop';
 import PainelEnvio from './pages/PainelEnvio';
+import MeusImoveis from './pages/MeusImoveis';
 import { supabase } from './supabase';
 import type { PropertyData } from './types'; // Importando a tipagem correta
 
@@ -51,8 +52,9 @@ function App() {
     const fetchProperties = async () => {
       try {
         const { data, error } = await supabase
-          .from('properties') // Correção aplicada!
+          .from('properties')
           .select('*')
+          .neq('status', 'Pendente') // Rascunhos aguardando confirmação ficam fora do site
           .order('score', { ascending: false });
 
         if (error) throw error;
@@ -84,6 +86,7 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/painel-envio" element={<PainelEnvio />} />
+        <Route path="/meus-imoveis" element={<MeusImoveis />} />
       </Routes>
     </Router>
   );

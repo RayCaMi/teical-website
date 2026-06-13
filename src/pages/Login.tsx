@@ -86,10 +86,26 @@ export default function Login() {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-text text-xl font-bold mb-2">Acesso Restrito</h2>
+          <h2 className="text-text text-xl font-bold mb-2">Entrar na Teical</h2>
           <p className="text-muted text-sm">
-            Área exclusiva para Leiloeiros e Administradores.
+            Compradores entram com o Google. Leiloeiros e administradores usam e-mail corporativo.
           </p>
+        </div>
+
+        {/* OPÇÃO PRINCIPAL: COMPRADOR VIA GOOGLE */}
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-4 bg-secondary hover:bg-secondary/90 text-background font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+        >
+          <GoogleIcon fontSize="small" />
+          Sou um Comprador (Google)
+        </button>
+
+        <div className="flex items-center gap-4 my-6">
+          <div className="h-px bg-border flex-1"></div>
+          <span className="text-muted text-xs uppercase tracking-widest">acesso restrito</span>
+          <div className="h-px bg-border flex-1"></div>
         </div>
 
         {/* FORMULÁRIO DE LOGIN REAL */}
@@ -124,30 +140,14 @@ export default function Login() {
 
           {error && <p className="text-red-500 text-sm font-medium mt-2">{error}</p>}
 
-          <button 
+          <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-secondary hover:bg-secondary/90 text-background font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-2 bg-background border border-border hover:border-secondary text-text font-bold py-3 px-6 rounded-2xl transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "A Autenticar..." : "Entrar no Sistema"}
+            {loading ? "A Autenticar..." : "Entrar como Leiloeiro / Admin"}
           </button>
         </form>
-
-        <div className="flex items-center gap-4 mb-6">
-          <div className="h-px bg-border flex-1"></div>
-          <span className="text-muted text-xs uppercase tracking-widest">ou</span>
-          <div className="h-px bg-border flex-1"></div>
-        </div>
-
-        {/* Botão de Login do Google */}
-        <button 
-          type="button"
-          onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-4 bg-background border border-border hover:border-secondary text-text font-bold py-3 px-6 rounded-2xl transition-colors duration-300"
-        >
-          <GoogleIcon fontSize="small" />
-          Sou um Comprador (Google)
-        </button>
 
         <p className="text-muted text-[10px] mt-8 uppercase tracking-widest leading-relaxed">
           Ao entrar, você concorda com nossos <br />

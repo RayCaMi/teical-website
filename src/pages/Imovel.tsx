@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -8,20 +8,115 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import BedIcon from '@mui/icons-material/Bed';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ReactMarkdown from 'react-markdown';
 
 import { useNavigate } from 'react-router-dom';
 import type { PropertyData } from '../types';
 import { formatCurrency } from '../types';
+import { supabase } from '../supabase';
+import { API_URL } from '../config';
 
 interface ImovelProps {
   data: PropertyData;
 }
 
+const formatarMoeda = (digitos: string) => {
+  const numero = parseInt(digitos || "0", 10) / 100;
+  return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+};
+
 export default function Imovel({ data }: ImovelProps) {
     const navigate = useNavigate();
     const [showManualAnalysis, setShowManualAnalysis] = useState(false);
     const analysisRef = useRef<HTMLDivElement>(null);
+
+    // GERENCIAMENTO: admin edita qualquer imóvel; leiloeiro, apenas os seus
+    const [podeGerenciar, setPodeGerenciar] = useState(false);
+    const [editando, setEditando] = useState(false);
+    const [salvando, setSalvando] = useState(false);
+    const [erroEdicao, setErroEdicao] = useState<string | null>(null);
+    const [form, setForm] = useState({
+        title: data.title,
+        location: data.location,
+        endereco: data.endereco ?? "",
+        precoDigitos: String(Math.round((data.price || 0) * 100)),
+        link_leiloeiro: data.link_leiloeiro ?? "",
+        quartos: String(data.quartos ?? 0),
+        vagas: String(data.vagas ?? 0),
+        area: String(data.area ?? 0),
+        categoria: data.categoria ?? "Outros",
+        status: data.status,
+        analise_manual: data.analise_manual ?? "",
+    });
+
+    useEffect(() => {
+        const verificar = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
+            const role = session.user.app_metadata?.role ?? session.user.user_metadata?.role;
+            const dono = data.owner_id && data.owner_id === session.user.id;
+            setPodeGerenciar(role === "admin" || (role === "leiloeiro" && !!dono));
+        };
+        verificar();
+    }, [data.owner_id]);
+
+    const salvarEdicao = async () => {
+        setSalvando(true);
+        setErroEdicao(null);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const response = await fetch(`${API_URL}/imoveis/${data.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({
+                    title: form.title,
+                    location: form.location,
+                    endereco: form.endereco,
+                    price: parseInt(form.precoDigitos || "0", 10) / 100,
+                    link_leiloeiro: form.link_leiloeiro,
+                    quartos: parseInt(form.quartos || "0", 10),
+                    vagas: parseInt(form.vagas || "0", 10),
+                    area: parseFloat(form.area || "0"),
+                    categoria: form.categoria,
+                    status: form.status,
+                    analise_manual: form.analise_manual,
+                }),
+            });
+            if (!response.ok) {
+                const corpo = await response.json().catch(() => null);
+                setErroEdicao(corpo?.detail ?? "Não foi possível salvar. Tente novamente.");
+                return;
+            }
+            // Recarrega para refletir os dados novos em todo o site
+            window.location.reload();
+        } catch {
+            setErroEdicao("Falha ao comunicar com o servidor. Tente novamente.");
+        } finally {
+            setSalvando(false);
+        }
+    };
+
+    const excluirImovel = async () => {
+        if (!window.confirm(`Excluir definitivamente "${data.title}"? As fotos também serão apagadas.`)) return;
+        setSalvando(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const response = await fetch(`${API_URL}/imoveis/${data.id}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${session?.access_token}` },
+            });
+            if (!response.ok) throw new Error();
+            window.location.href = "/imoveis";
+        } catch {
+            setErroEdicao("Não foi possível excluir. Tente novamente.");
+            setSalvando(false);
+        }
+    };
 
     // SISTEMA DE GALERIA DE FOTOS
     // Se existir uma galeria com fotos, usamos. Se não, criamos uma lista só com a foto de capa.
@@ -113,7 +208,7 @@ export default function Imovel({ data }: ImovelProps) {
                                 <LocationPinIcon className="mr-3" fontSize="small" /> Endereço
                             </h3>
                             <h3 className="text-text font-bold text-sm text-right">
-                                {data.location}
+                                {data.endereco ? `${data.endereco} · ${data.location}` : data.location}
                             </h3>
                         </div>
 
@@ -158,6 +253,77 @@ export default function Imovel({ data }: ImovelProps) {
                                   <LaunchIcon className="absolute right-6 opacity-0 group-hover:opacity-100 transition-opacity" fontSize="small"/>
                               </h3>
                           </a>
+                        )}
+
+                        {/* GERENCIAMENTO (admin ou leiloeiro dono) */}
+                        {podeGerenciar && (
+                            <div className="mt-4 border border-dashed border-border rounded-2xl p-4">
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-muted text-xs font-bold uppercase tracking-widest">Gerenciar Imóvel</span>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => { setEditando(!editando); setErroEdicao(null); }} className="flex items-center gap-1 px-3 py-2 text-xs font-bold text-secondary border border-secondary/30 rounded-lg hover:bg-secondary/10 transition-colors">
+                                            <EditIcon fontSize="small" /> {editando ? "Fechar edição" : "Editar"}
+                                        </button>
+                                        <button onClick={excluirImovel} disabled={salvando} className="flex items-center gap-1 px-3 py-2 text-xs font-bold text-red-400 border border-red-400/30 rounded-lg hover:bg-red-400/10 transition-colors disabled:opacity-50">
+                                            <DeleteIcon fontSize="small" /> Excluir
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {editando && (
+                                    <div className="mt-4 flex flex-col gap-3">
+                                        {erroEdicao && <p className="text-red-400 text-sm font-medium">{erroEdicao}</p>}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Título
+                                                <input type="text" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Cidade - UF
+                                                <input type="text" value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider sm:col-span-2">Endereço
+                                                <input type="text" value={form.endereco} onChange={e => setForm({ ...form, endereco: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Lance Mínimo
+                                                <input type="text" inputMode="numeric" value={form.precoDigitos ? formatarMoeda(form.precoDigitos) : ""} onChange={e => setForm({ ...form, precoDigitos: e.target.value.replace(/\D/g, "").slice(0, 15) })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Link do Leiloeiro
+                                                <input type="url" value={form.link_leiloeiro} onChange={e => setForm({ ...form, link_leiloeiro: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Quartos
+                                                <input type="number" min="0" value={form.quartos} onChange={e => setForm({ ...form, quartos: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Vagas
+                                                <input type="number" min="0" value={form.vagas} onChange={e => setForm({ ...form, vagas: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Área (m²)
+                                                <input type="number" min="0" step="0.01" value={form.area} onChange={e => setForm({ ...form, area: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary" />
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Categoria
+                                                <select value={form.categoria} onChange={e => setForm({ ...form, categoria: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary">
+                                                    <option value="Casa">Casa</option>
+                                                    <option value="Apartamento">Apartamento</option>
+                                                    <option value="Galpão">Galpão</option>
+                                                    <option value="Lajes">Lajes</option>
+                                                    <option value="Outros">Outros</option>
+                                                </select>
+                                            </label>
+                                            <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Status
+                                                <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary">
+                                                    <option value="Em Leilão">Em Leilão</option>
+                                                    <option value="Desocupado">Desocupado</option>
+                                                    <option value="Arrematado">Arrematado</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                        <label className="flex flex-col gap-1 text-muted text-xs font-bold uppercase tracking-wider">Parecer do Especialista
+                                            <textarea rows={5} value={form.analise_manual} onChange={e => setForm({ ...form, analise_manual: e.target.value })} placeholder="Parecer manual exibido junto à análise da IA (aceita Markdown)" className="bg-background border border-border rounded-xl px-3 py-2 text-text text-sm font-normal normal-case outline-none focus:border-secondary resize-y" />
+                                        </label>
+                                        <button onClick={salvarEdicao} disabled={salvando} className="bg-secondary hover:bg-secondary/90 text-background font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg disabled:opacity-50">
+                                            {salvando ? "Salvando..." : "Salvar alterações"}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
                 </div>
