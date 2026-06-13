@@ -19,11 +19,12 @@ export interface PropertyData {
   categoria?: string; // <- NOVA LINHA
 }
 
-// A estrutura de notícias (mantida exatamente como você tinha)
+// A estrutura de notícias exibida no front
 export interface NewsData {
   id: string;
   titulo: string;
   resumo: string;
+  conteudo?: string;      // Corpo completo do artigo (Markdown)
   categoria: string;
   data: string;
   leituraMinutos: number;
@@ -32,6 +33,38 @@ export interface NewsData {
   isNovo?: boolean;
   isTendencia?: boolean;
 }
+
+// Como a notícia chega do Supabase (snake_case)
+export interface NewsRow {
+  id: string;
+  titulo: string;
+  resumo: string;
+  conteudo?: string;
+  categoria: string;
+  autor: string;
+  imagem_url: string;
+  leitura_minutos: number;
+  is_novo?: boolean;
+  is_tendencia?: boolean;
+  created_at?: string;
+}
+
+// Converte a linha do banco para o formato usado nos componentes
+export const mapNews = (row: NewsRow): NewsData => ({
+  id: String(row.id),
+  titulo: row.titulo,
+  resumo: row.resumo,
+  conteudo: row.conteudo,
+  categoria: row.categoria,
+  autor: row.autor,
+  imagemUrl: row.imagem_url,
+  leituraMinutos: row.leitura_minutos ?? 3,
+  isNovo: row.is_novo,
+  isTendencia: row.is_tendencia,
+  data: row.created_at
+    ? new Date(row.created_at).toLocaleDateString('pt-BR')
+    : '',
+});
 
 // Utilitário para formatar moeda
 export const formatCurrency = (value: number) => {

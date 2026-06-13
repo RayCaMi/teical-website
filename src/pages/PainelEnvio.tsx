@@ -4,6 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import ArticleIcon from '@mui/icons-material/Article';
 import ReactMarkdown from 'react-markdown';
 import { supabase } from "../supabase";
 import { API_URL } from "../config";
@@ -221,6 +222,9 @@ export default function PainelEnvio() {
           </Link>
           <Link to="/meus-imoveis" className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-secondary hover:bg-secondary/10 rounded-lg transition-colors border border-secondary/30">
             <HomeWorkIcon fontSize="small" /> Meus Imóveis
+          </Link>
+          <Link to="/gerenciar-noticias" className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-secondary hover:bg-secondary/10 rounded-lg transition-colors border border-secondary/30">
+            <ArticleIcon fontSize="small" /> Notícias
           </Link>
           <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20">
             <LogoutIcon fontSize="small" /> Encerrar Sessão

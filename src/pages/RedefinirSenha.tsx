@@ -54,7 +54,9 @@ export default function RedefinirSenha() {
       return;
     }
     setSucesso(true);
-    setTimeout(() => navigate("/"), 2500);
+    // Redirecionamento "duro": recarrega a aplicação na home, limpando o token
+    // de recuperação que ainda possa estar na URL e evitando voltar a esta tela
+    setTimeout(() => { window.location.href = "/"; }, 2500);
   };
 
   return (

@@ -13,6 +13,9 @@ import ScrollToTop from './components/ScrollToTop';
 import PainelEnvio from './pages/PainelEnvio';
 import MeusImoveis from './pages/MeusImoveis';
 import RedefinirSenha from './pages/RedefinirSenha';
+import GerenciarNoticias from './pages/GerenciarNoticias';
+import Termos from './pages/Termos';
+import Privacidade from './pages/Privacidade';
 import { supabase } from './supabase';
 import type { PropertyData } from './types'; // Importando a tipagem correta
 
@@ -20,16 +23,22 @@ import type { PropertyData } from './types'; // Importando a tipagem correta
 // links de convite e de redefinição de senha chegam com type=invite/recovery
 const hashInicial = window.location.hash;
 
-// Leva quem clicou num link de e-mail direto para a tela de definir senha
+// Leva quem clicou num link de e-mail direto para a tela de definir senha.
+// A trava (pathname) evita redirecionar em loop quando já estamos na página.
 function RedirecionadorAuth() {
   const navigate = useNavigate();
   useEffect(() => {
+    const irParaDefinirSenha = () => {
+      if (window.location.pathname !== '/definir-senha') {
+        navigate('/definir-senha', { replace: true });
+      }
+    };
     if (hashInicial.includes('type=invite') || hashInicial.includes('type=recovery')) {
-      navigate('/definir-senha', { replace: true });
+      irParaDefinirSenha();
       return;
     }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') navigate('/definir-senha', { replace: true });
+      if (event === 'PASSWORD_RECOVERY') irParaDefinirSenha();
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -104,11 +113,14 @@ function App() {
           <Route path="/noticias" element={<Noticias />} />
           <Route path="/noticia/:id" element={<NoticiaDetalhe />} />
           <Route path="/seja-membro" element={<SejaMembro />} />
+          <Route path="/termos" element={<Termos />} />
+          <Route path="/privacidade" element={<Privacidade />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/painel-envio" element={<PainelEnvio />} />
         <Route path="/meus-imoveis" element={<MeusImoveis />} />
+        <Route path="/gerenciar-noticias" element={<GerenciarNoticias />} />
         <Route path="/definir-senha" element={<RedefinirSenha />} />
       </Routes>
     </Router>

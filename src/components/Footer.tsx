@@ -25,7 +25,7 @@ export function Footer() {
             <li><Link to="/imoveis" className="hover:text-secondary transition-colors">Imóveis</Link></li>
             <li><Link to="/quem-somos" className="hover:text-secondary transition-colors">Quem somos</Link></li>
             <li><Link to="/noticias" className="hover:text-secondary transition-colors">Notícias</Link></li>
-            <li><Link to="/" className="hover:text-secondary transition-colors">Conexões</Link></li>
+            <li><Link to="/seja-membro" className="hover:text-secondary transition-colors">Conexões</Link></li>
           </ul>
         </div>
 
@@ -60,8 +60,8 @@ export function Footer() {
         <p>© 2026 Teical. A inteligência que arremata.</p>
         
         <div className="flex gap-8">
-          <Link to="/" className="hover:text-secondary transition-colors">Privacidade</Link>
-          <Link to="/" className="hover:text-secondary transition-colors">Termos de Uso</Link>
+          <Link to="/privacidade" className="hover:text-secondary transition-colors">Privacidade</Link>
+          <Link to="/termos" className="hover:text-secondary transition-colors">Termos de Uso</Link>
         </div>
       </div>
     </footer>

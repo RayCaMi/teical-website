@@ -1,24 +1,38 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { NewsCard } from "../components/NewsCard";
-import { mockNews } from "../data/newsMock";
+import { supabase } from "../supabase";
+import { mapNews, type NewsData, type NewsRow } from "../types";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Link } from 'react-router-dom';
 
 export default function Noticias() {
+    const [noticias, setNoticias] = useState<NewsData[]>([]);
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState('Todos');
     const itemsPerPage = 6;
 
     const categorias = ['Todos', 'Leilões', 'Direito Imobiliário', 'Mercado', 'Jurisprudência', 'Tributário', 'Tecnologia'];
 
+    useEffect(() => {
+        const carregar = async () => {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (!error && data) setNoticias((data as NewsRow[]).map(mapNews));
+            setLoading(false);
+        };
+        carregar();
+    }, []);
+
     const filteredNews = useMemo(() => {
-        if (selectedCategory === 'Todos') return mockNews;
-        return mockNews.filter(item => item.categoria === selectedCategory);
-    }, [selectedCategory]);
+        if (selectedCategory === 'Todos') return noticias;
+        return noticias.filter(item => item.categoria === selectedCategory);
+    }, [selectedCategory, noticias]);
 
     const isHome = selectedCategory === 'Todos';
-
     const heroNews = isHome ? filteredNews[0] : null;
     const newsForGrid = isHome ? filteredNews.slice(1) : filteredNews;
 
@@ -27,6 +41,7 @@ export default function Noticias() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
     return (
         <div className="bg-background min-h-screen p-8 pt-24 text-text">
             <div className="max-w-7xl mx-auto">
@@ -50,6 +65,13 @@ export default function Noticias() {
                     </div>
                 </header>
 
+                {loading ? (
+                    <div className="py-20 text-center text-secondary font-bold">Carregando notícias...</div>
+                ) : noticias.length === 0 ? (
+                    <div className="py-20 text-center border-2 border-dashed border-border rounded-2xl">
+                        <p className="text-muted">Nenhuma notícia publicada ainda.</p>
+                    </div>
+                ) : (
                 <div className="flex flex-col lg:flex-row gap-10">
                     <main className="flex-1">
                         {heroNews && isHome && currentPage === 1 && (
@@ -92,7 +114,7 @@ export default function Noticias() {
                         <div className="bg-secondary-dark/10 border border-secondary/10 p-6 rounded-2xl shadow-xl">
                             <h2 className="text-text font-bold mb-4 text-lg border-b border-border pb-2 uppercase tracking-tighter italic">Em Alta</h2>
                             <div className="flex flex-col gap-4">
-                                {mockNews.slice(0, 4).map((n, i) => (
+                                {noticias.slice(0, 4).map((n, i) => (
                                     <div key={n.id} className="group cursor-pointer">
                                         <span className="text-secondary text-[10px] font-bold">{i + 1}.</span>
                                         <Link to={`/noticia/${n.id}`}>
@@ -113,6 +135,7 @@ export default function Noticias() {
                         </div>
                     </aside>
                 </div>
+                )}
             </div>
         </div>
     );

@@ -108,6 +108,9 @@ export default function MeusImoveis() {
           <Link to="/painel-envio" className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-secondary hover:bg-secondary/10 rounded-lg transition-colors border border-secondary/30">
             + Cadastrar Imóvel
           </Link>
+          <Link to="/gerenciar-noticias" className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-secondary hover:bg-secondary/10 rounded-lg transition-colors border border-secondary/30">
+            Notícias
+          </Link>
           <Link to="/" className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-muted hover:text-secondary hover:bg-secondary/10 rounded-lg transition-colors">
             <ArrowBackIcon fontSize="small" /> Voltar ao site
           </Link>

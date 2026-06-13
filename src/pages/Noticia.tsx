@@ -1,16 +1,31 @@
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockNews } from '../data/newsMock';
+import ReactMarkdown from 'react-markdown';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonIcon from '@mui/icons-material/Person';
+import { supabase } from '../supabase';
+import { mapNews, type NewsData, type NewsRow } from '../types';
 
 export default function NoticiaDetalhe() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [noticia, setNoticia] = useState<NewsData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Busca a notícia pelo ID
-  const noticia = mockNews.find(n => n.id === id);
+  useEffect(() => {
+    const carregar = async () => {
+      const { data } = await supabase.from('news').select('*').eq('id', id).single();
+      if (data) setNoticia(mapNews(data as NewsRow));
+      setLoading(false);
+    };
+    carregar();
+  }, [id]);
+
+  if (loading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-secondary font-bold">Carregando notícia...</div>;
+  }
 
   if (!noticia) {
     return (
@@ -24,9 +39,9 @@ export default function NoticiaDetalhe() {
   return (
     <div className="bg-background min-h-screen pt-28 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
-        
+
         {/* Botão Voltar */}
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="group flex items-center gap-2 text-muted hover:text-secondary transition-colors mb-8 font-bold uppercase text-xs tracking-widest"
         >
@@ -46,9 +61,9 @@ export default function NoticiaDetalhe() {
 
         {/* Imagem de Capa */}
         <div className="w-full h-75 md:h-125 rounded-3xl overflow-hidden mb-10 border border-border/50">
-          <img 
-            src={noticia.imagemUrl} 
-            alt={noticia.titulo} 
+          <img
+            src={noticia.imagemUrl}
+            alt={noticia.titulo}
             className="w-full h-full object-cover"
           />
         </div>
@@ -91,24 +106,8 @@ export default function NoticiaDetalhe() {
           <p className="text-xl text-muted leading-relaxed mb-8 italic">
             {noticia.resumo}
           </p>
-          
-          <div className="text-text text-lg leading-loose space-y-6 opacity-90">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <h2 className="text-2xl font-bold text-secondary mt-10">O Impacto no Mercado</h2>
-            <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
-            </p>
-            <blockquote className="border-l-4 border-secondary pl-6 py-2 my-10 bg-secondary/5 rounded-r-xl">
-              "A transparência nos processos de arrematação é o que define o sucesso do investidor a longo prazo no setor imobiliário."
-            </blockquote>
-            <p>
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
-            </p>
+          <div className="text-text text-lg leading-loose">
+            <ReactMarkdown>{noticia.conteudo || ''}</ReactMarkdown>
           </div>
         </article>
 
