@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
 import Home from './pages/Home';
 import Imoveis from './pages/Imoveis';
@@ -12,8 +12,29 @@ import SejaMembro from './pages/SejaMembro';
 import ScrollToTop from './components/ScrollToTop';
 import PainelEnvio from './pages/PainelEnvio';
 import MeusImoveis from './pages/MeusImoveis';
+import RedefinirSenha from './pages/RedefinirSenha';
 import { supabase } from './supabase';
 import type { PropertyData } from './types'; // Importando a tipagem correta
+
+// Captura o hash da URL antes de o supabase-js processá-lo e limpá-lo:
+// links de convite e de redefinição de senha chegam com type=invite/recovery
+const hashInicial = window.location.hash;
+
+// Leva quem clicou num link de e-mail direto para a tela de definir senha
+function RedirecionadorAuth() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (hashInicial.includes('type=invite') || hashInicial.includes('type=recovery')) {
+      navigate('/definir-senha', { replace: true });
+      return;
+    }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') navigate('/definir-senha', { replace: true });
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+  return null;
+}
 
 // 1. O WRAPPER AGORA FICA DO LADO DE FORA (Regra de Ouro do React)
 // Ele recebe as propriedades e o loading através de "props"
@@ -70,8 +91,9 @@ function App() {
   }, []);
 
   return (
-    <Router> 
+    <Router>
       <ScrollToTop />
+      <RedirecionadorAuth />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home properties={properties} loading={loading} />} />
@@ -87,6 +109,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/painel-envio" element={<PainelEnvio />} />
         <Route path="/meus-imoveis" element={<MeusImoveis />} />
+        <Route path="/definir-senha" element={<RedefinirSenha />} />
       </Routes>
     </Router>
   );

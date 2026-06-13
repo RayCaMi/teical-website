@@ -12,6 +12,26 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mensagem, setMensagem] = useState<string | null>(null);
+
+  // Envia o link de redefinição para o e-mail digitado no campo acima
+  const handleEsqueciSenha = async () => {
+    if (!email) {
+      setError("Digite seu e-mail no campo acima e clique de novo em 'Esqueci minha senha'.");
+      return;
+    }
+    setError(null);
+    setMensagem(null);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/definir-senha`,
+      });
+      if (error) throw error;
+      setMensagem("Enviamos um link de redefinição para o seu e-mail. Verifique a caixa de entrada (e o spam).");
+    } catch (err: any) {
+      setError(`Não foi possível enviar o e-mail: ${err.message}`);
+    }
+  };
 
   // Função REAL conectada ao Supabase com RBAC (Cargos)
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -138,7 +158,16 @@ export default function Login() {
             />
           </div>
 
+          <button
+            type="button"
+            onClick={handleEsqueciSenha}
+            className="text-muted text-xs font-bold hover:text-secondary transition-colors text-right -mt-1"
+          >
+            Esqueci minha senha
+          </button>
+
           {error && <p className="text-red-500 text-sm font-medium mt-2">{error}</p>}
+          {mensagem && <p className="text-green-500 text-sm font-medium mt-2">{mensagem}</p>}
 
           <button
             type="submit"
